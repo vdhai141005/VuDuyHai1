@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Bat Family</title>
+    <link rel="stylesheet" href="styles/main.css">
+<style>
+ 
+/* ===== Layout tổng ===== */
+#root{
+  width:1024px;               /* i. khung chứa lớn */
+  margin:24px auto;           
+  padding:0 8px;
+  color:#222;
+  text-shadow: 0 1px 0 rgba(255,255,255,.6);
+  font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+ 
+/* Dải xám của header */
+#site-header{
+  margin: 0 0 18px;
+  font-size:24px;
+  line-height:52px;
+  text-align:center;
+  color:#2b2b2b;
+  border-radius:6px;
+  background: linear-gradient(#dcdcdc,#cfcfcf);
+  box-shadow: inset 0 1px 0 #eee, 0 1px 2px rgba(0,0,0,.05);
+}
+ 
+/* Nhóm chữ + icon đặt giữa */
+#site-header span{
+  display:inline-flex;            /* để icon và chữ nằm cùng hàng */
+  align-items:center;
+  gap:10px;                       /* khoảng cách icon–chữ */
+}
+ 
+/* Icon dơi đứng TRƯỚC chữ */
+#site-header span::before{
+  content:"";
+  width:26px;                     /* chỉnh kích thước icon */
+  height:16px;
+  display:inline-block;
+  background: url("imgs/logo.png") center/contain no-repeat;
+}
+ 
+/* ===== Danh sách anh hùng ===== */
+.superheroes{
+  list-style:none;
+  padding:0;
+  margin:0 0 10px;
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  flex-wrap:nowrap;
+}
+ 
+/* iii. LI trong .superheroes */
+.superheroes > li{
+  width:188px;                
+  display:inline-block;       
+  position:relative;
+  transition:all .25s ease;
+}
+ 
+/* iv. Ảnh trong .superheroes */
+.superheroes img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  border-radius:16px;
+  border:4px solid #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
+}
+ 
+/* Nhãn tên anh hùng trên ảnh */
+.hero-header{
+  position:absolute;
+  left:10px;
+  top:10px;
+  z-index:2;
+  padding:6px 10px;
+  border-radius:10px;
+  font-weight:700;
+  color:#fff;
+  background:rgba(0,0,0,.55);
+  text-shadow: 0 1px 0 rgba(0,0,0,.5);
+}
+ 
+/* v. Thẻ a trong .superheroes */
+.superheroes a{
+  position:absolute;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  display:none;               /* ẩn mặc định */
+  width:max-content;
+  padding:6px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.9);
+  color:#333;
+  text-decoration:none;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+ 
+/* vi. Hover */
+.superheroes > li:hover{
+  width:210px;                /* 2. tăng chiều rộng khi hover */
+  z-index:1;
+}
+.superheroes > li:hover a{
+  display:block;              /* 1. hiện Read more */
+  text-decoration:underline;  /* gạch chân */
+}
+ 
+</style>
+</head>
+<body>
+    <div id="root">
+        <h1 id="site-header"><span>The Bat family<span></h1>
+        <ul class="superheroes">
+            <li>
+                <strong class="hero-header">Batman</strong>
+                <img src="imgs/superhero-1.jpg" alt="">
+                <a href="https://en.wikipedia.org/wiki/Batman">Read more</a>
+            </li>
+            <li>
+                <strong class="hero-header">Batwing</strong>
+                <img src="imgs/superhero-2.jpg" alt="">
+                <a href="https://en.wikipedia.org/wiki/Batwing_(DC_Comics)">Read more</a>
+            </li>
+            <li>
+                <strong class="hero-header">Batgirl</strong>
+                <img src="imgs/superhero-3.jpg" alt="">
+                <a href="https://en.wikipedia.org/wiki/Batgirl">Read more</a>
+            </li>
+            <li>
+                <strong class="hero-header">Nightwing</strong>
+                <img src="imgs/superhero-4.jpg" alt="">
+                <a href="https://en.wikipedia.org/wiki/Nightwing">Read more</a>
+            </li>
+            <li>
+                <strong class="hero-header">Red Robin</strong>
+                <img src="imgs/superhero-5.jpg" alt="">
+                <a href="https://en.wikipedia.org/wiki/Red_Robin_(comics)">Read more</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

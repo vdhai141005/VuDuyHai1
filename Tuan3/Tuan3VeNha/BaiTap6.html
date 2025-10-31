@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Học web chuẩn</title>
+<style>
+/* Reset cơ bản */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+ 
+body{
+    background: #f8f8f8;
+}
+ 
+.portfolio{
+    text-align: center;
+    padding: 40px 0;
+}
+ 
+/* Title */
+.portfolio h2{
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+ 
+/* Thanh menu */
+.list-tab{
+    list-style: none;
+    margin-bottom: 30px;
+}
+ 
+.list-tab li{
+    display: inline-block;
+    margin: 0 15px;
+}
+ 
+.list-tab a{
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    padding-bottom: 5px;
+}
+ 
+.list-tab a:hover,
+.list-tab li:first-child a{
+    color: #008c99;
+    border-bottom: 2px solid #008c99;
+}
+ 
+/* Gallery */
+.galerry{
+    width: 90%;
+    margin: 0 auto;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+ 
+.galerry li{
+    width: 32%;
+    margin-bottom: 20px;
+}
+ 
+.galerry img{
+    width: 100%;
+    height: auto;
+}
+</style>
+</head>
+ 
+<body>
+<section class="portfolio">
+    <h2>MY PORTFOLIO</h2>
+ 
+    <ul class="list-tab">
+        <li><a href="#">All</a></li>
+        <li><a href="#">Web App</a></li>
+        <li><a href="#">UI/UX</a></li>
+        <li><a href="#">Graphics Design</a></li>
+        <li><a href="#">Mobile App</a></li>
+        <li><a href="#">Branding</a></li>
+        <li><a href="#">Marketing</a></li>
+    </ul>
+ 
+    <ul class="galerry">
+        <li><a href="#"><img src="imgs/img_350x260.png" alt=""></a></li>
+        <li><a href="#"><img src="imgs/img_350x260.png" alt=""></a></li>
+        <li><a href="#"><img src="imgs/img_350x260.png" alt=""></a></li>
+    </ul>
+</section>
+</body>
+</html>
