@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Bài Tập - Vũ Duy Hải</title>
+    <style>
+        /* Cấu hình chung */
+        :root {
+            --primary-color: #0056b3; /* Màu xanh UEH */
+            --accent-color: #ff9800;  /* Màu cam */
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+
+        /* Phần Header Thông tin cá nhân */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #003d80);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .avatar img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .info h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .info p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .ueh-badge {
+            margin-top: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Phần danh sách bài tập */
+        .assignments {
+            padding: 40px;
+            background-color: #fafafa;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Thẻ bài tập (Card) */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Màu sắc riêng cho từng loại bài */
+        .card.basic { border-left-color: #3498db; }
+        .card.interactive { border-left-color: #9b59b6; }
+        .card.game { border-left-color: #e74c3c; background: #fff5f5; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .btn-go {
+            margin-top: 15px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #eee;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="profile-section">
+                <div class="avatar">
+                    <img src="https://ui-avatars.com/api/?name=Vu+Duy+Hai&background=random" alt="Avatar">
+                </div>
+                <div class="info">
+                    <h1>Vũ Duy Hải</h1>
+                    <p>MSSV: 31231023871</p>
+                    <div class="ueh-badge">Phát triển ứng dụng TMĐT</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="assignments">
+            <h2 class="section-title">Danh sách bài tập Javascript</h2>
+            
+            <div class="grid-container">
+                
+                <!-- BÀI 1 -->
+                <a href="BaiTap1.html" class="card basic">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #aaa;">Bài 01</span>
+                        <span class="card-icon">📝</span>
+                    </div>
+                    <h3>Nhập Xuất Cơ Bản</h3>
+                    <p>Nhập tên và tuổi, hiển thị định dạng H1 màu xanh và H2 gạch chân.</p>
+                    <div class="btn-go">Xem bài làm →</div>
+                </a>
+
+                <!-- BÀI 2 -->
+                <a href="BaiTap2.html" class="card basic">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #aaa;">Bài 02</span>
+                        <span class="card-icon">⚠️</span>
+                    </div>
+                    <h3>Nút Cảnh Báo</h3>
+                    <p>Tạo hộp Text và nút Alert. Hiển thị thông báo "Truy tìm" kèm tên.</p>
+                    <div class="btn-go">Xem bài làm →</div>
+                </a>
+
+                <!-- BÀI 3 -->
+                <a href="BaiTap3.html" class="card interactive">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #aaa;">Bài 03</span>
+                        <span class="card-icon">📂</span>
+                    </div>
+                    <h3>Dropdown Menu</h3>
+                    <p>Xử lý sự kiện click để đóng mở menu con đa cấp (Sản phẩm, Tin tức...).</p>
+                    <div class="btn-go">Xem bài làm →</div>
+                </a>
+
+                <!-- BÀI 4 -->
+                <a href="BaiTap4.html" class="card interactive">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #aaa;">Bài 04</span>
+                        <span class="card-icon">⏱️</span>
+                    </div>
+                    <h3>Đồng Hồ Đếm Ngược</h3>
+                    <p>Ứng dụng đếm ngược thời gian sử dụng <code>setTimeout</code>.</p>
+                    <div class="btn-go">Xem bài làm →</div>
+                </a>
+
+                <!-- BÀI 5 -->
+                <a href="BaiTap5.html" class="card interactive">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #aaa;">Bài 05</span>
+                        <span class="card-icon">❤️</span>
+                    </div>
+                    <h3>Love App</h3>
+                    <p>Ứng dụng tỏ tình vui nhộn. Nút "Không" sẽ đổi chỗ khi bấm sai 3 lần.</p>
+                    <div class="btn-go">Xem bài làm →</div>
+                </a>
+
+                <!-- BÀI 6 -->
+                <a href="BaiTap6.html" class="card game">
+                    <div class="card-header">
+                        <span style="font-weight: bold; color: #e74c3c;">Bài 06 (Bonus)</span>
+                        <span class="card-icon">🐉</span>
+                    </div>
+                    <h3>Đại Chiến Rồng Già</h3>
+                    <p>Game nhập vai đánh theo lượt. Có animation, thanh máu và nhật ký chiến đấu.</p>
+                    <div class="btn-go">Chơi ngay →</div>
+                </a>
+
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2025 - Bài tập cá nhân Javascript - UEH University
+        </footer>
+    </div>
+
+</body>
+</html>
