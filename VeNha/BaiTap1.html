@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 1 - UEH</title>
+</head>
+<body>
+    <h3>Bài 1: Nhập thông tin</h3>
+    
+    <input type="text" id="ten" placeholder="Nhập tên của bạn">
+    <input type="number" id="tuoi" placeholder="Nhập tuổi">
+    <button onclick="xuLyHienThi()">Hiển thị</button>
+
+    <div id="ketqua" style="margin-top: 20px;"></div>
+
+    <script>
+        function xuLyHienThi() {
+            // 1. Lấy giá trị từ ô nhập
+            var ten = document.getElementById("ten").value;
+            var tuoi = document.getElementById("tuoi").value;
+
+            // 2. Xử lý hiển thị theo yêu cầu (H1 xanh đậm, H2 gạch chân)
+            var htmlHienThi = `
+                <h1 style="color: blue; font-weight: bold;">${ten}</h1>
+                <h2 style="text-decoration: underline;">${tuoi}</h2>
+            `;
+
+            // 3. Xuất ra màn hình
+            document.getElementById("ketqua").innerHTML = htmlHienThi;
+        }
+    </script>
+</body>
+</html>

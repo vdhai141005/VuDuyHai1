@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Love App - Bài 5</title>
+    <style>
+        /* CSS trang trí cho đẹp để lấy điểm cộng */
+        body {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4); /* Màu nền gradient hồng */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        h1 {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 3rem;
+            margin-bottom: 50px;
+        }
+
+        .container-nut {
+            display: flex;
+            gap: 50px; /* Khoảng cách giữa 2 nút */
+            background: rgba(255, 255, 255, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px; /* Bo tròn nút */
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        /* Trang trí nút CÓ */
+        #btnCo {
+            background-color: #4CAF50; /* Màu xanh */
+            color: white;
+            box-shadow: 0 4px #2E7D32;
+        }
+        #btnCo:active {
+            box-shadow: 0 0 #2E7D32;
+            transform: translateY(4px);
+        }
+
+        /* Trang trí nút KHÔNG */
+        #btnKhong {
+            background-color: #f44336; /* Màu đỏ */
+            color: white;
+            box-shadow: 0 4px #c62828;
+        }
+        #btnKhong:active {
+            box-shadow: 0 0 #c62828;
+            transform: translateY(4px);
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.05); /* Phóng to nhẹ khi di chuột */
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>BẠN CÓ THÍCH MÌNH KHÔNG? ❤️</h1>
+
+    <div class="container-nut" id="vungChuaNut">
+        <button id="btnCo">CÓ</button>
+        <button id="btnKhong">KHÔNG</button>
+    </div>
+
+    <script>
+        // Khai báo biến
+        var soLanSai = 0;
+        var btnCo = document.getElementById("btnCo");
+        var btnKhong = document.getElementById("btnKhong");
+        var vungChua = document.getElementById("vungChuaNut");
+
+        // 1. Xử lý khi nhấn nút CÓ
+        btnCo.addEventListener("click", function() {
+            alert("Xin lỗi, bạn không phải là đối tượng của mình. 😅");
+        });
+
+        // 2. Xử lý khi nhấn nút KHÔNG
+        btnKhong.addEventListener("click", function() {
+            alert("Có thể Bạn nên chọn lại.");
+            soLanSai++; // Tăng biến đếm lên 1
+
+            // Kiểm tra nếu sai đủ 3 lần
+            if (soLanSai === 3) {
+                doiChoHaiNut();
+                // Reset lại biến đếm để có thể chơi tiếp (tùy chọn)
+                soLanSai = 0; 
+            }
+        });
+
+        // Hàm đổi vị trí 2 nút
+        function doiChoHaiNut() {
+            /* Logic đổi chỗ: 
+               Trong thẻ div cha (#vungChuaNut) đang có thứ tự [Nút 1, Nút 2].
+               Dùng lệnh appendChild(Nút 1) sẽ tự động đẩy Nút 1 xuống cuối cùng -> thành [Nút 2, Nút 1].
+            */
+            
+            // Kiểm tra xem nút đầu tiên hiện tại là nút nào để đổi
+            var nutDauTien = vungChua.children[0];
+
+            if (nutDauTien.id === "btnCo") {
+                // Nếu CÓ đang đứng đầu -> Đẩy CÓ xuống cuối -> Thứ tự thành: KHÔNG - CÓ
+                vungChua.appendChild(btnCo);
+            } else {
+                // Ngược lại -> Đẩy KHÔNG xuống cuối -> Thứ tự thành: CÓ - KHÔNG
+                vungChua.appendChild(btnKhong);
+            }
+        }
+    </script>
+
+</body>
+</html>

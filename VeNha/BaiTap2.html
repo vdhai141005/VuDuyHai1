@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 2 - Sửa lỗi</title>
+</head>
+<body>
+
+    <label>Họ và tên: </label>
+    <input type="text" id="txtHoTen" placeholder="Nhập tên...">
+
+    <button onclick="chayCanhBao()">Cảnh báo</button>
+
+    <script>
+        // Khai báo hàm xử lý
+        function chayCanhBao() {
+            // 1. Tìm ô nhập liệu
+            var input = document.getElementById("txtHoTen");
+            
+            // 2. Lấy giá trị bên trong
+            var ten = input.value;
+
+            // 3. Kiểm tra xem người dùng đã nhập gì chưa (tùy chọn)
+            if (ten === "") {
+                alert("Bạn chưa nhập tên!");
+            } else {
+                // 4. Hiện thông báo truy tìm
+                alert("Truy tìm " + ten);
+            }
+        }
+    </script>
+
+</body>
+</html>
