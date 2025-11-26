@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh Hùng Javascript - Battle Visualized</title>
+
+    <style>
+        /* --- CẤU TRÚC CƠ BẢN --- */
+        body {
+            background-image: url('https://bazaarvietnam.vn/wp-content/uploads/2023/08/harper-bazaar-ten-cac-sieu-anh-hung-trong-marvel-22-e1691312027348.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #content, #updated_stats, #battle_log {
+            background-color: rgba(0, 0, 0, 0.85); /* Tăng độ tối nền để dễ đọc */
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        h1, h2, h3 { color: #ffcc00; text-shadow: 1px 1px 2px #000; }
+        hr { border-color: rgba(255,255,255,0.2); }
+
+        /* --- GIAO DIỆN TRẬN ĐẤU (VISUAL BATTLE ARENA) --- */
+        #battle-arena {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 350px; /* Chiều cao khu vực chiến đấu */
+            margin-bottom: 20px;
+            padding-top: 50px;
+        }
+
+        .fighter-box {
+            text-align: center;
+            width: 40%;
+            position: relative;
+        }
+
+        /* Ảnh nhân vật */
+        .fighter-img {
+            height: 250px; /* Chiều cao cố định cho ảnh */
+            width: auto;
+            object-fit: contain;
+            /* Tạo bóng cho nhân vật tách nền */
+            filter: drop-shadow(0px 5px 10px rgba(0,0,0,0.8));
+            transition: transform 0.3s ease; /* Giúp chuyển động mượt mà */
+        }
+
+        /* Mặc định rồng quay đầu sang trái, cần lật lại để đối mặt anh hùng */
+        #dragon-img {
+            transform: scaleX(-1);
+        }
+
+        /* Thanh máu đơn giản */
+        .health-bar-container {
+            width: 80%;
+            height: 20px;
+            background-color: #555;
+            border: 2px solid #fff;
+            margin: 10px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .health-bar-fill {
+            height: 100%;
+            width: 100%;
+            background-color: #2ecc71; /* Màu xanh lá */
+            transition: width 0.5s ease-in-out; /* Hiệu ứng tụt máu mượt mà */
+        }
+
+        #battle_log {
+            height: 200px;
+            overflow-y: auto; /* Thanh cuộn cho log */
+            border: 2px solid #e74c3c;
+            font-family: monospace;
+        }
+
+        /* --- CÁC HIỆU ỨNG HOẠT HÌNH (CSS ANIMATIONS) --- */
+
+        /* 1. Anh hùng tấn công (Lao sang phải) */
+        @keyframes attackRight {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(80px) scale(1.1); } /* Lao tới và phóng to nhẹ */
+            100% { transform: translateX(0) scale(1); }
+        }
+        .anim-hero-attack { animation: attackRight 0.6s ease-in-out; }
+
+        /* 2. Rồng tấn công (Lao sang trái) - Cần giữ scaleX(-1) */
+        @keyframes attackLeft {
+            0% { transform: scaleX(-1) translateX(0) scale(1); }
+            50% { transform: scaleX(-1) translateX(80px) scale(1.1); } /* Lao tới (do bị lật nên X dương là sang trái) */
+            100% { transform: scaleX(-1) translateX(0) scale(1); }
+        }
+        .anim-dragon-attack { animation: attackLeft 0.6s ease-in-out; }
+
+        /* 3. Bị trúng đòn (Rung lắc và nháy đỏ) */
+        @keyframes hitShake {
+            0% { transform: translate(1px, 1px) rotate(0deg); filter: sepia(1) hue-rotate(-50deg) saturate(3); } /* Nháy đỏ */
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); filter: none; }
+        }
+        .anim-hit-hero { animation: hitShake 0.5s; }
+        /* Rồng bị trúng đòn cần giữ scaleX(-1) */
+        .anim-hit-dragon { animation: hitShake 0.5s; transform: scaleX(-1); }
+
+
+        /* 4. Né đòn (Mờ đi) */
+        @keyframes dodgeFade {
+            0% { opacity: 1; transform: translateX(0); }
+            50% { opacity: 0.3; transform: translateX(-20px); } /* Lùi lại và mờ đi */
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .anim-dodge { animation: dodgeFade 0.5s ease; }
+
+    </style>
+</head>
+<body>
+
+    <div id="content"></div>
+    <div id="updated_stats"></div>
+
+    <div id="battle-arena">
+        <div class="fighter-box">
+            <h3 id="hero-name-display">Anh Hùng</h3>
+            <div class="health-bar-container">
+                <div id="hero-health-fill" class="health-bar-fill"></div>
+            </div>
+            <img src="https://thanhnien.mediacdn.vn/Uploaded/game/st.game.thanhnien.com.vn/image/777/2015/5/19/offline-cac-sieu-anh-hung-avengers-ngay-ay-va-bay-gio-12.jpg" 
+                 class="fighter-img" id="hero-img" alt="Anh Hùng">
+        </div>
+
+        <div class="fighter-box">
+            <h3>Rồng Già Cổ Đại</h3>
+            <div class="health-bar-container">
+                <div id="dragon-health-fill" class="health-bar-fill"></div>
+            </div>
+            <img src="https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-rong.jpg" 
+                 class="fighter-img" id="dragon-img" alt="Rồng Già">
+        </div>
+    </div>
+
+    <div id="battle_log"></div>
+
+    <script>
+        // ============================================================
+        // CÁC HÀM HỖ TRỢ HÌNH ẢNH & CHUYỂN ĐỘNG (VISUAL HELPERS)
+        // ============================================================
+
+        // Hàm tạo độ trễ (sleep), giúp tạm dừng code để chờ hiệu ứng
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Hàm chạy hiệu ứng animation
+        async function playAnimation(elementId, animationClass, duration = 600) {
+            const element = document.getElementById(elementId);
+            // Reset animation bằng cách xóa class và buộc trình duyệt vẽ lại (reflow)
+            element.classList.remove(animationClass);
+            void element.offsetWidth; 
+            // Thêm class để kích hoạt animation
+            element.classList.add(animationClass);
+            // Chờ animation chạy xong
+            await sleep(duration);
+            // Xóa class sau khi chạy xong
+            element.classList.remove(animationClass);
+        }
+
+        // Hàm cập nhật thanh máu trên giao diện
+        function updateHealthBars(currentHeroHP, maxHeroHP, currentDragonHP, maxDragonHP) {
+            const heroPercent = (currentHeroHP / maxHeroHP) * 100;
+            const dragonPercent = (currentDragonHP / maxDragonHP) * 100;
+            document.getElementById('hero-health-fill').style.width = Math.max(0, heroPercent) + "%";
+            document.getElementById('dragon-health-fill').style.width = Math.max(0, dragonPercent) + "%";
+        }
+
+        // Hàm ghi log trực tiếp vào màn hình và tự cuộn xuống
+        const logBox = document.getElementById('battle_log');
+        function addLog(message) {
+            logBox.innerHTML += message;
+            logBox.scrollTop = logBox.scrollHeight; // Tự động cuộn xuống dòng mới nhất
+        }
+
+
+        // ============================================================
+        // LOGIC CHÍNH (Được bọc trong hàm async để dùng await)
+        // ============================================================
+        
+        async function startQuecst() { // Đổi tên hàm chính thành async
+
+            // --- CODE CŨ: KHỞI TẠO & BÀI TẬP 1-4 (GIỮ NGUYÊN) ---
+            var tenBan = "Vũ Duy Hải"; 
+            var mssv = "31231023871"; 
+            var level = 1; 
+            var xp = 0;
+            var skillPoints = 5;
+
+            var strength_initial = (0.6 * skillPoints) + (0.1 * xp);
+            var agility_initial = (0.2 * skillPoints) + (0.2 * xp);
+            var intel_initial = (0.2 * skillPoints) + (10 * level);
+
+            var outputHTML = "<h1>" + "Tôi tên là " + tenBan + " – MSSV: " + mssv + " sẽ quyết tâm trở thành 1 anh hùng JS</h1>";
+            outputHTML += "<h2>Chỉ Số Khởi Tạo</h2><div class='initial-stats'><p>Level: " + level + "</p>...</div>";
+            document.getElementById('content').innerHTML = outputHTML;
+
+            var strength_updated = strength_initial;
+            var agility_updated = agility_initial;
+            var intel_updated = intel_initial;
+
+            // Prompt tương tác
+            await sleep(500); // Chờ chút cho trang web load xong ảnh nền
+            var tenNhapLai = prompt("Xác nhận tên Anh Hùng của bạn:", tenBan);
+            if (tenNhapLai === tenBan) { skillPoints += 5; } else { skillPoints -= 5; }
+
+            var chonPhanCap = prompt('Chọn phân cấp (a: Chiến Binh, b: Sát Thủ, c: Thợ Săn):', 'a');
+            var phanCap = "Chưa chọn";
+            var luaChon = chonPhanCap ? chonPhanCap.toLowerCase() : "";
+            switch (luaChon) {
+                case 'a': phanCap = "Chiến Binh"; strength_updated += 10; agility_updated -= 10; break;
+                case 'b': phanCap = "Sát Thủ"; strength_updated -= 10; agility_updated += 5; intel_updated += 5; break;
+                case 'c': phanCap = "Thợ Săn"; strength_updated -= 10; intel_updated += 10; break;
+                default: phanCap = "Tập Sự"; break;
+            }
+
+            var updatedOutputHTML = "<h1>Xin chào " + phanCap + "</h1><p>Strength Mới: " + strength_updated.toFixed(1) + "</p>...";
+            document.getElementById('updated_stats').innerHTML = updatedOutputHTML;
+            
+            // Cập nhật tên trên đấu trường
+            document.getElementById('hero-name-display').innerText = tenBan + " (" + phanCap + ")";
+
+
+            // ===================================
+            // BÀI TẬP 5 & 6: TRẬN CHIẾN CÓ HÌNH ẢNH
+            // ===================================
+
+            // 1. Thiết lập chỉ số
+            var battleLevel = 5;
+            var heroHealth = battleLevel * 100;
+            var maxHeroHP = heroHealth; // Lưu máu tối đa để tính thanh máu
+            var heroDamage = strength_updated;
+            var heroAgility = Math.max(0, agility_updated);
+            var heroIntel = Math.max(0, intel_updated);
+
+            var dragonHealth = 600;
+            var maxDragonHP = dragonHealth; // Lưu máu tối đa
+            var dragonStr = 100;
+            var dragonAgi = 15;
+            var dragonInt = 80;
+
+            // Khởi tạo thanh máu ban đầu
+            updateHealthBars(heroHealth, maxHeroHP, dragonHealth, maxDragonHP);
+
+            addLog("<h2>BATTLE START! Anh Hùng vs Rồng Già</h2><hr>");
+            await sleep(1000); // Nghỉ 1 giây trước khi bắt đầu
+
+            var round = 0;
+
+            // 3. Vòng lặp chiến đấu (Sử dụng async while)
+            while (heroHealth > 0 && dragonHealth > 0) {
+                round++;
+                addLog("<h3>--- Lượt " + round + " ---</h3>");
+                await sleep(500); // Nghỉ đầu hiệp
+
+                // --- 3a. Anh Hùng tấn công trước ---
+                // HIỆU ỨNG: Anh hùng lao lên tấn công
+                await playAnimation('hero-img', 'anim-hero-attack');
+
+                var randomChance = Math.random() * 100;
+
+                if (randomChance < dragonAgi) {
+                    // Rồng né
+                    addLog("🛡️ Anh Hùng tấn công: Rồng né đòn!<br>");
+                    // HIỆU ỨNG: Rồng né (mờ đi)
+                    await playAnimation('dragon-img', 'anim-dodge');
+                } else {
+                    // Rồng trúng đòn
+                    var damageToDragon = heroDamage;
+                    var msg = "";
+                    if (randomChance > heroIntel) {
+                        damageToDragon *= 3;
+                        msg = "💥 <b>CHÍ MẠNG!</b> Anh Hùng gây " + damageToDragon.toFixed(0) + " sát thương.<br>";
+                    } else {
+                        msg = "⚔️ Anh Hùng tấn công: Gây " + damageToDragon.toFixed(0) + " sát thương.<br>";
+                    }
+                    dragonHealth -= damageToDragon;
+                    addLog(msg);
+                    // HIỆU ỨNG: Rồng bị đánh trúng (rung lắc, đỏ)
+                    playAnimation('dragon-img', 'anim-hit-dragon'); 
+                    // Cập nhật thanh máu ngay lập tức
+                    updateHealthBars(heroHealth, maxHeroHP, dragonHealth, maxDragonHP);
+                    await sleep(600); // Chờ hiệu ứng bị đánh xong
+                }
+
+                if (dragonHealth <= 0) break; // Rồng chết thì dừng
+
+                await sleep(800); // Nghỉ giữa 2 lượt đánh
+
+                // --- 3b. Rồng tấn công sau ---
+                // HIỆU ỨNG: Rồng lao lên tấn công
+                await playAnimation('dragon-img', 'anim-dragon-attack');
+
+                randomChance = Math.random() * 100;
+
+                if (randomChance < heroAgility) {
+                    // Anh Hùng né
+                    addLog("🛡️ Rồng tấn công: Anh Hùng né đòn!<br>");
+                    // HIỆU ỨNG: Anh hùng né
+                    await playAnimation('hero-img', 'anim-dodge');
+                } else {
+                    // Anh Hùng trúng đòn
+                    var damageToHero = dragonStr;
+                    var msg = "";
+                    if (randomChance > dragonInt) {
+                        damageToHero *= 3;
+                        msg = "🔥 <b>RỒNG PHUN LỬA CHÍ MẠNG!</b> Gây " + damageToHero.toFixed(0) + " sát thương.<br>";
+                    } else {
+                        msg = "🐉 Rồng tấn công: Gây " + damageToHero.toFixed(0) + " sát thương.<br>";
+                    }
+                    heroHealth -= damageToHero;
+                    addLog(msg);
+                    // HIỆU ỨNG: Anh hùng bị đánh trúng
+                    playAnimation('hero-img', 'anim-hit-hero');
+                    // Cập nhật thanh máu
+                    updateHealthBars(heroHealth, maxHeroHP, dragonHealth, maxDragonHP);
+                    await sleep(600); // Chờ hiệu ứng
+                }
+
+                // Hiển thị máu text nhỏ cuối hiệp
+                addLog(`<small style='color:cyan'>HP Anh Hùng: ${Math.max(0, heroHealth.toFixed(0))} | HP Rồng: ${Math.max(0, dragonHealth.toFixed(0))}</small><hr>`);
+                await sleep(500); // Nghỉ cuối hiệp
+            }
+
+            // 4. Kết thúc
+            addLog("<h3>--- TRẬN ĐẤU KẾT THÚC ---</h3>");
+            await sleep(1000);
+
+            if (heroHealth > 0) {
+                addLog("<h1>🎉 CHÚC MỪNG! " + tenBan + " đã diệt Rồng Già!</h1>");
+                // Hiệu ứng thắng: Rồng biến mất
+                document.getElementById('dragon-img').style.opacity = 0;
+            } else {
+                addLog("<h1>💀 THẤT BẠI! Anh Hùng đã gục ngã.</h1>");
+                 // Hiệu ứng thua: Anh hùng nằm xuống
+                document.getElementById('hero-img').style.transform = "rotate(-90deg) translateY(50px)";
+                document.getElementById('hero-img').style.filter = "grayscale(100%)";
+            }
+        }
+
+        // Gọi hàm để bắt đầu chạy toàn bộ chương trình
+        startQuecst();
+
+    </script>
+</body>
+</html>
